@@ -1,4 +1,4 @@
-from django.utils.encoding import force_unicode
+from django.utils.encoding import force_text
 from django.contrib.gis.db import models
 from django.contrib.gis.geos import Point
 from conf import settings
@@ -29,7 +29,7 @@ class Place(models.Model):
         return "/".join([place.slug for place in self.hierarchy])
 
     def __unicode__(self):
-        return force_unicode(self.name)
+        return force_text(self.name)
 
 class Country(Place):
     code = models.CharField(max_length=2, db_index=True)
@@ -54,7 +54,7 @@ class Country(Place):
         return None
 
     def __unicode__(self):
-        return force_unicode(self.name)
+        return force_text(self.name)
 
 class Region(Place):
     name_std = models.CharField(max_length=200, db_index=True, verbose_name="standard name")
@@ -116,7 +116,7 @@ class AlternativeName(models.Model):
     is_colloquial = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return "%s (%s)" % (force_unicode(self.name), force_unicode(self.language))
+        return "%s (%s)" % (force_text(self.name), force_text(self.language))
 
 class PostalCode(Place):
     code = models.CharField(max_length=20)
@@ -144,12 +144,12 @@ class PostalCode(Place):
     def names(self):
         """Get a hierarchy of non-null names, root first"""
         return [e for e in [
-            force_unicode(self.country),
-            force_unicode(self.region_name),
-            force_unicode(self.subregion_name),
-            force_unicode(self.district_name),
-            force_unicode(self.name),
+            force_text(self.country),
+            force_text(self.region_name),
+            force_text(self.subregion_name),
+            force_text(self.district_name),
+            force_text(self.name),
         ] if e]
 
     def __unicode__(self):
-        return force_unicode(self.code)
+        return force_text(self.code)
